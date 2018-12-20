@@ -1,12 +1,29 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
+const users = [
+    { id: 1, name: 'user1'},
+    { id: 2, name: 'user2'},
+    { id: 3, name: 'user3'},
+];
+
 app.get('/', (req, res) => {
     res.send('Hello World');
 })
 
-app.post('/', async (req, res) => {
-    let user = { name: 'user1' };
+app.get('/user', (req, res) => {
+    res.send(users);
+})
+
+app.post('/user', (req, res) => {
+    const user = {
+        id: req.body.id,
+        name: req.body.name
+    };
+    if (!req.body.name) return res.status(404).send('User not found');
+    users.push(user);
     res.send(user);
 })
 
