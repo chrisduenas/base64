@@ -37,9 +37,34 @@ describe('/', () => {
         });
 
         it('should not save if user is not valid', async () => {
-            user = '';
-            const res = await request(server).post('/');
+            const res = await request(server).post('/user');
             expect(res.status).toBe(404);
         })
+    });
+
+    describe('PUT /user/:id', () => {
+        let newId;
+        let newName;
+
+        it('should return 404 if id is not valid', async () => {
+            newId = '';
+            const res = await request(server)
+                            .put('/user/:id')
+                            .send({id: newId});
+
+            expect(res.status).toBe(404);
+        });
+
+        it('should return 400 if user id is less than 5 characters', async () => {
+            newName = '1234'
+
+            const res = await request(server)
+                            .put('/user/:id')
+                            .send({name: newName});
+
+            expect(newName).toHaveLength(4);
+            expect(res.status).toBe(400);
+        });
+
     });
 });
