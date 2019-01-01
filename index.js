@@ -27,6 +27,11 @@ app.post('/user', (req, res) => {
     res.send(user);
 });
 
+app.get('/user/:id', (req, res) => {
+    const user = users.find(u => u.id === parseInt(req.params.id));
+    res.send(user);
+});
+
 app.put('/user/:id', (req, res) => {
     const user = {
         id: req.body.id,
@@ -36,7 +41,7 @@ app.put('/user/:id', (req, res) => {
     if(req.body.name.length < 5) return res.status(400).send('Name must be at least 5 characters');
 
     res.send(user);
-})
+});
 
 const port = process.env.PORT || 3000
 
