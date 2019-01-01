@@ -42,6 +42,13 @@ describe('/', () => {
         })
     });
 
+    describe('GET /user/:id', () => {
+        it('should return user by given id', async() => {
+            const res = await request(server).get('/user/:id');
+            expect(res.status).toBe(200);
+        });
+    });
+
     describe('PUT /user/:id', () => {
         let newId;
         let newName;
