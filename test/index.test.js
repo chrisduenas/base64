@@ -43,8 +43,16 @@ describe('/', () => {
     });
 
     describe('GET /user/:id', () => {
+        let id;
+
+        it('should return 404 if user with given id is not found', async() => {
+            id = '';
+            const res = await request(server).get('/user/:id').send({id});
+            expect(res.status).toBe(404);
+        });
+
         it('should return user by given id', async() => {
-            const res = await request(server).get('/user/:id');
+            const res = await request(server).get('/user/' + id);
             expect(res.status).toBe(200);
         });
     });
