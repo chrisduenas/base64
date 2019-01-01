@@ -29,6 +29,7 @@ app.post('/user', (req, res) => {
 
 app.get('/user/:id', (req, res) => {
     const user = users.find(u => u.id === parseInt(req.params.id));
+    if (!user) return res.status(404).send('Cannot find user with given Id');
     res.send(user);
 });
 
