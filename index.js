@@ -29,17 +29,28 @@ app.post('/user', (req, res) => {
 
 app.get('/user/:id', (req, res) => {
     const user = users.find(u => u.id === parseInt(req.params.id));
-    if (!user) return res.status(404).send('Cannot find user with given Id');
+    if (!user) return res.status(404).send('Cannot find user with given ID');
     res.send(user);
 });
 
 app.put('/user/:id', (req, res) => {
     const user = {
-        id: req.body.id,
+        id: req.params.id,
         name: req.body.name
     };
+
+    if (!user) return res.status(404).send('Cannot find user with given ID');
     if(!req.body.name) return res.status(404).send('User cannot be updated');
     if(req.body.name.length < 5) return res.status(400).send('Name must be at least 5 characters');
+    res.send(user);
+});
+
+app.delete('/user/:id', (req, res) => {
+    const user = users.find(u => u.id === parseInt(req.params.id));
+    if (!user) return res.status(404).send('Cannot find user with given ID');
+
+    const index = users.indexOf(user);
+    users.splice(index, 1);
 
     res.send(user);
 });

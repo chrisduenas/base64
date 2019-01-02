@@ -62,7 +62,7 @@ describe('/', () => {
         let newName;
 
         it('should return 404 if id is not valid', async () => {
-            newId = '';
+            newId = 5;
             const res = await request(server)
                             .put('/user/:id')
                             .send({id: newId});
@@ -70,7 +70,7 @@ describe('/', () => {
             expect(res.status).toBe(404);
         });
 
-        it('should return 400 if user id is less than 5 characters', async () => {
+        it('should return 400 if user name is less than 5 characters', async () => {
             newName = '1234'
 
             const res = await request(server)
@@ -81,5 +81,30 @@ describe('/', () => {
             expect(res.status).toBe(400);
         });
 
+    });
+
+    describe('DELETE /user/:id', () => {
+        let user;
+
+        it('should return 404 if id is not valid', async () => {
+            id = '';
+
+            const res = await request(server).delete('/user/' + id);
+
+            expect(res.status).toBe(404);
+        });
+
+        it('should return the removed user', async () => {
+            user = {
+                "id" : 1,
+                "name" : "user1"
+            }
+
+            const res = await request(server).delete('/user/' + user.id);
+
+            expect(res.body).toHaveProperty('id', 1);
+            expect(res.body).toHaveProperty('name', 'user1');
+
+        });
     });
 });
