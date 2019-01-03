@@ -10,10 +10,6 @@ const users = [
     { id: 3, name: 'user3'}
 ];
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
-
 app.get('/user', (req, res) => {
     res.send(users);
 });
