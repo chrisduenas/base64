@@ -1,3 +1,4 @@
+const Joi = require('joi');
 const express = require('express');
 const app = express();
 
@@ -6,7 +7,7 @@ app.use(express.json());
 const users = [
     { id: 1, name: 'user1'},
     { id: 2, name: 'user2'},
-    { id: 3, name: 'user3'},
+    { id: 3, name: 'user3'}
 ];
 
 app.get('/', (req, res) => {
@@ -18,11 +19,20 @@ app.get('/user', (req, res) => {
 });
 
 app.post('/user', (req, res) => {
+    const schema = {
+        name: Joi.string().min(3).max(20).required()
+    };
+    const result = Joi.validate(req.body, schema);
+
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
+        return;
+    }
+
     const user = {
-        id: req.body.id,
+        id: users.length + 1,
         name: req.body.name
     };
-    if (!req.body.name) return res.status(404).send('User not found');
     users.push(user);
     res.send(user);
 });
@@ -34,14 +44,18 @@ app.get('/user/:id', (req, res) => {
 });
 
 app.put('/user/:id', (req, res) => {
-    const user = {
-        id: req.params.id,
-        name: req.body.name
-    };
+    const user = users.find(u => u.id === parseInt(req.params.id));
+    if (!user) return res.status(404).send('The user with the given ID was not found');
 
-    if (!user) return res.status(404).send('Cannot find user with given ID');
-    if(!req.body.name) return res.status(404).send('User cannot be updated');
-    if(req.body.name.length < 5) return res.status(400).send('Name must be at least 5 characters');
+    const schema = {
+        name: Joi.string().min(3).max(20).required()
+    };
+    const result = Joi.validate(req.body, schema);
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
+        return;
+    }
+    user.name = req.body.name;
     res.send(user);
 });
 
